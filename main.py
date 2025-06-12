@@ -1,23 +1,31 @@
+import json
 import sqlite3
+
+with open("bibliaAveMaria.json", "r", encoding="utf-8") as f:
+    data = json.load(f)
+
+old_testament = data["antigoTestamento"]
 
 conn = sqlite3.connect("bible.db")
 cursor = conn.cursor()
 
-cursor.execute("DROP TABLE IF EXISTS verses")
+for book in old_testament:
+    book_name = book["nome"]
+    author = "Desconhecido"
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS verses (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    book TEXT NOT NULL,
-    author TEXT,
-    chapter INTEGER NOT NULL,
-    verse INTEGER NOT NULL,
-    text TEXT NOT NULL,
-    is_new_testament BOOLEAN NOT NULL
-)
-""")
+    for chapter in book["capitulos"]:
+        chapter_number = chapter["capitulo"]
+
+        for verse in chapter["versiculos"]:
+            verse_number = verse["versiculo"]
+            verse_text = verse["texto"]
+
+            cursor.execute("""
+                INSERT INTO verses (book, author, chapter, verse, text, is_new_testament)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (book_name, author, chapter_number, verse_number, verse_text, 0))
 
 conn.commit()
 conn.close()
 
-print("Database and table created.")
+print("Old testamente inserted")
