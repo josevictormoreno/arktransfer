@@ -23,7 +23,7 @@ if opt == "1":
         print(f"{book} {chapter}:{verse} - {text}")
 
 if opt == "2":
-    cursor.execute("SELECT DISTINCT book FROM verses")
+    cursor.execute("SELECT DISTINCT book, abbrv FROM verses")
     rows = cursor.fetchall()
     for row in rows:
         print(row)
