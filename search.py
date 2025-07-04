@@ -39,8 +39,10 @@ if opt == "3":
         "SELECT text FROM verses WHERE abbrv = ? AND chapter = ?", (book, chapter,))
     rows = cursor.fetchall()
 
+    i = 1
     for row in rows:
-        i = 1
         print(f"{i}:{row}")
+        i += 1
+
 
 conn.close()
